@@ -1,2 +1,9 @@
 <h5>Buscar:</h5>
-<input type="text" class="form-control" placeholder="Buscar gifs...">
+<input
+  type="text"
+  class="form-control"
+  placeholder="Buscar gifs..."
+  (keyup.enter)="buscar()"
+  #txtBuscar>
+<!-- por medio del evento keyup.enter (escribe algo en la caja de texto y da enter) por medio de #txtBuscar
+y el parametro value obtiene el valor añadido en la caja de texto y lo envia a la funcion buscar()-->
