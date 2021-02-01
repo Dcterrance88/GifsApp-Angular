@@ -6,8 +6,11 @@ import { Injectable } from '@angular/core';
 })
 export class GifsService {
 
+  private _gifSearchEndpoint: string = 'http://api.giphy.com/v1/gifs/search';
   private _apiKeyGiphyDev: string = 'ZxShx3tiQ311guiicibZBIwBb9cGclyZ';
   private _historial: string[]= [];
+  // TODO: Cambiar any por su tipo correspondiente
+  public resultados: any[] =[];
 
   public historial(): string[]{
     return [...this._historial];
@@ -23,9 +26,10 @@ export class GifsService {
       this._historial = this._historial.splice(0,10);
     }
 
-    this.http.get('http://api.giphy.com/v1/gifs/search?api_key=ZxShx3tiQ311guiicibZBIwBb9cGclyZ&q=dragon ball z&limit=10')
+    this.http.get(`${this._gifSearchEndpoint}?api_key=${this._apiKeyGiphyDev}&q=${query}&limit=10`)
       .subscribe( (response:any) => {
         console.log(response.data);
+        this.resultados = response.data;
       })
 
   }
