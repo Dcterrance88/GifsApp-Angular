@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Gif, SearchGifsResponse } from '../interface/gifs.interfaces';
 
@@ -7,31 +7,35 @@ import { Gif, SearchGifsResponse } from '../interface/gifs.interfaces';
 })
 export class GifsService {
 
-  private _gifSearchEndpoint: string = 'http://api.giphy.com/v1/gifs/search';
+  private _servicioUrl: string = 'http://api.giphy.com/v1/gifs';
   private _apiKeyGiphyDev: string = 'ZxShx3tiQ311guiicibZBIwBb9cGclyZ';
-  private _historial: string[]= [];
-  public resultados: Gif[] =[];
+  private _historial: string[] = [];
+  public resultados: Gif[] = [];
 
-  public historial(): string[]{
+  public historial(): string[] {
     return [...this._historial];
   }
 
-  constructor(private http: HttpClient){
+  constructor(private http: HttpClient) {
     this._historial = JSON.parse(localStorage.getItem('historial')!) || [];
     this.resultados = JSON.parse(localStorage.getItem('resultados')!) || [];
   }
 
-  public buscarGifs(query:string = ''):void {
+  public buscarGifs(query: string = ''): void {
     query = query.trim().toLowerCase();
+    const params = new HttpParams()
+      .set('api_key', this._apiKeyGiphyDev)
+      .set('limit', '10')
+      .set('q', query);
 
-    if(!this._historial.includes(query)){
+    if (!this._historial.includes(query)) {
       this._historial.unshift(query);
-      this._historial = this._historial.splice(0,10);
+      this._historial = this._historial.splice(0, 10);
       localStorage.setItem('historial', JSON.stringify(this._historial));
     }
 
-    this.http.get<SearchGifsResponse>(`${this._gifSearchEndpoint}?api_key=${this._apiKeyGiphyDev}&q=${query}&limit=10`)
-      .subscribe( (response) => {
+    this.http.get<SearchGifsResponse>(`${this._servicioUrl}/search`, { params })
+      .subscribe((response) => {
         console.log(response.data);
         this.resultados = response.data;
         localStorage.setItem('resultados', JSON.stringify(this.resultados));
