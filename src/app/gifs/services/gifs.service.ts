@@ -23,7 +23,6 @@ export class GifsService {
 
   public buscarGifs(query:string = ''):void {
     query = query.trim().toLowerCase();
-    console.log(query);
 
     if(!this._historial.includes(query)){
       this._historial.unshift(query);
